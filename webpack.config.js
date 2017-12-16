@@ -2,6 +2,9 @@
  * Created by Bear on 17/12/6.
  */
 const path = require('path');
+const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry:{
@@ -12,6 +15,14 @@ module.exports = {
         contentBase: './dist',
         hot: true
     },
+    plugins: [
+        new CleanWebpackPlugin(['dist']),
+        new HtmlWebpackPlugin(),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'common'
+        }),
+        new webpack.HotModuleReplacementPlugin()
+    ],
     module: {
         rules: [
             {
