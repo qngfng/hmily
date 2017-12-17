@@ -7,7 +7,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry:{
+    entry: {
         app: './src/index.js',
     },
     devtool: 'inline-source-map',
@@ -17,21 +17,39 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(['dist']),
-        new HtmlWebpackPlugin(),
+        new HtmlWebpackPlugin(
+            {
+                template:'./src/index.html'
+            }
+        ),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'common'
         }),
         new webpack.HotModuleReplacementPlugin()
     ],
+    resolve: {
+        extensions: [".tsx", ".ts", ".js"]
+    },
     module: {
         rules: [
             {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
+                test: /\.tsx?$/,
+                loader: 'ts-loader',
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.less$/,
+                use: [{
+                    loader: "style-loader"  // creates style nodes from JS strings
+                }, {
+                    loader: "css-loader"    // translates CSS into CommonJS
+                }, {
+                    loader: "less-loader"   // compiles Less to CSS
+                }]
             }
         ]
     },
-    output:{
+    output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/'
